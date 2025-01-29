@@ -1,8 +1,15 @@
 ## Project Overview
 
-This is a backend project built with [NestJS](https://nestjs.com), a progressive Node.js framework for building efficient and scalable server-side applications. The backend provides RESTful APIs and handles the business logic for the application.
+# ⚙️ Paggo OCR - Backend  
+Este é o backend do sistema de OCR desenvolvido para o case técnico da **Paggo**. Ele processa uploads de imagens, realiza extração de texto via OCR, interage com um LLM para respostas contextuais e gerencia autenticação de usuários.  
 
-## Getting Started
+## 🚀 Funcionalidades  
+✔ Upload de imagens (via ImageKit)  
+✔ Extração de texto via OCR  
+✔ Interação com LLM para explicações sobre o texto extraído  
+✔ Armazenamento de documentos e interações no banco de dados  
+✔ Autenticação de usuários (bcrypt + JWT) 
+
 
 ### Prerequisites
 
