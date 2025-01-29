@@ -15,7 +15,7 @@ export class LlmService {
   ) {}
 
   async queryModel(prompt: string): Promise<string> {
-    const model = 'deepseek-ai/DeepSeek-R1';
+    const model = 'gpt2';
     const apiKey = this.configService.get<string>('HF_API_KEY');
 
     if (!apiKey) {
