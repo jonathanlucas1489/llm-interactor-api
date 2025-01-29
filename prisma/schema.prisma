@@ -8,18 +8,29 @@ datasource db {
 }
 
 model User {
-  id        String   @id @default(uuid())
-  email     String   @unique
+  id        String      @id @default(uuid())
+  email     String      @unique
   password  String
   documents Document[]
 }
 
 model Document {
-  id           String   @id @default(uuid())
+  id           String       @id @default(uuid())
   userId       String
-  user         User     @relation(fields: [userId], references: [id])
+  user         User         @relation(fields: [userId], references: [id])
   filename     String
   textExtract  String
   llmContext   String?
-  createdAt    DateTime @default(now())
+  imageUrl     String       
+  createdAt    DateTime     @default(now())
+  interactions Interaction[]
+}
+
+model Interaction {
+  id          String   @id @default(uuid())
+  documentId  String
+  isFromUser  Boolean  
+  content     String  
+  createdAt   DateTime @default(now())
+  document    Document @relation(fields: [documentId], references: [id])
 }

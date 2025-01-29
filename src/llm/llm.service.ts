@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+/* eslint-disable @typescript-eslint/no-unsafe-return */
 import { HttpService } from '@nestjs/axios';
 import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
@@ -13,18 +15,26 @@ export class LlmService {
   ) {}
 
   async queryModel(prompt: string): Promise<string> {
-    const model = 'gpt2';
+    const model = 'deepseek-ai/DeepSeek-R1';
     const apiKey = this.configService.get<string>('HF_API_KEY');
 
     if (!apiKey) {
-      throw new InternalServerErrorException('Hugging Face API key not configured.');
+      throw new InternalServerErrorException(
+        'Hugging Face API key not configured.',
+      );
     }
 
     try {
       const response = await firstValueFrom(
         this.httpService.post(
           `${this.hfApiUrl}${model}`,
-          { inputs: prompt },
+          {
+            inputs: prompt,
+            parameters: {
+              temperature: 0.7,
+              max_tokens: 700,
+            },
+          },
           { headers: { Authorization: `Bearer ${apiKey}` } },
         ),
       );
@@ -32,7 +42,9 @@ export class LlmService {
       return response.data[0].generated_text || 'No response from model.';
     } catch (error) {
       console.error('Error querying Hugging Face model:', error.message);
-      throw new InternalServerErrorException('Failed to query Hugging Face model.');
+      throw new InternalServerErrorException(
+        'Failed to query Hugging Face model.',
+      );
     }
   }
 }

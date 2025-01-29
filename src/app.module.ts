@@ -6,10 +6,18 @@ import { LlmModule } from './llm/llm.module';
 import { OcrModule } from './ocr/ocr.module';
 import { DocumentsController } from './documents/documents.controller';
 import { ConfigModule } from '@nestjs/config';
+import { AuthModule } from './auth/auth.module';
+import { AuthController } from './auth/auth.controller';
+import { AuthService } from './auth/auth.service';
 
 @Module({
-  imports: [LlmModule, OcrModule, ConfigModule.forRoot({ isGlobal: true })],
-  controllers: [AppController, DocumentsController],
-  providers: [AppService, PrismaService],
+  imports: [
+    LlmModule,
+    OcrModule,
+    ConfigModule.forRoot({ isGlobal: true }),
+    AuthModule,
+  ],
+  controllers: [AppController, DocumentsController, AuthController],
+  providers: [AppService, PrismaService, AuthService],
 })
-export class AppModule { }
+export class AppModule {}
