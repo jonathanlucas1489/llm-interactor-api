@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unsafe-call */
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
 import { Controller, Post, Body } from '@nestjs/common';
 import { OcrService } from '../ocr/ocr.service';
 import { LlmService } from '../llm/llm.service';
@@ -17,7 +15,18 @@ export class DocumentsController {
   async uploadDocument(
     @Body() { filePath, userId }: { filePath: string; userId: string },
   ) {
+    const user = await this.prisma.user.findUnique({
+      where: {
+        id: userId,
+      },
+    });
+
+    if (!user) {
+      throw new Error(`User with id ${userId} not found`);
+    }
+
     const text = await this.ocrService.extractText(filePath);
+
     const document = await this.prisma.document.create({
       data: {
         userId,
@@ -27,7 +36,7 @@ export class DocumentsController {
       },
     });
 
-    const llmResponse = await this.llmService.queryModel(text);
+    const llmResponse = `Extracted Text: ${text}\n\n Ask me about.`;
 
     await this.prisma.interaction.create({
       data: {
@@ -50,7 +59,10 @@ export class DocumentsController {
         id: documentId,
       },
     });
-    const llmResponse = await this.llmService.queryModel(prompt);
+    const llmResponse = await this.llmService.queryModel(
+      prompt,
+      document.textExtract,
+    );
 
     if (document) {
       await this.prisma.interaction.create({
